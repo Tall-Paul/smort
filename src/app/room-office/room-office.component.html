@@ -1,0 +1,12 @@
+<mat-expansion-panel>
+    <mat-expansion-panel-header class="room">
+      <mat-panel-title>
+        <mat-icon>work_outline</mat-icon><span class="example-spacer"></span> Office 
+      </mat-panel-title>     
+    </mat-expansion-panel-header>
+    <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px">        
+          <app-device-light deviceName="OfficeLight" displayName="Main Light"></app-device-light>
+          <app-device-occupancy deviceName="Occupancy"></app-device-occupancy>  
+          <app-device-temperature deviceName="OfficeTemperature" displayName="Temperature"></app-device-temperature>           
+    </div>
+  </mat-expansion-panel>

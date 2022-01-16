@@ -1,0 +1,13 @@
+<mat-card>
+    <div fxLayout="row" fxLayoutAlign="center center"> 
+        <mat-card-title>{{displayName}}</mat-card-title>
+    </div>
+    <div fxLayout="row" fxLayoutAlign="center center">                
+        <span class="device">{{getValue()}}</span>           
+    </div>        
+    <div fxLayout="row" fxLayoutAlign="space-between">                
+        <span class="info"><mat-icon inline="true">battery_full</mat-icon>{{getBattery()}}</span>     
+        <span class="info"><mat-icon inline="true">wifi</mat-icon></span>       
+    </div> 
+  </mat-card>
+

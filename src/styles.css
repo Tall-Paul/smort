@@ -1,1 +1,30 @@
 /* You can add global styles to this file, and also import other style files */
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+.example-spacer {
+    flex: 0.01 1 auto;
+  }
+  .room{
+      line-height:25px;
+  }
+  .device{
+      font-size: 300%;
+      line-height: 130%;
+  }
+  .info{
+    font-size: 100%;
+    
+  }
+
+  .card { cursor: pointer; }
+
+  .device_off {
+      opacity: 0.5;
+  }
+
+  .device_on {
+      opacity: 1;
+  }
+  
+

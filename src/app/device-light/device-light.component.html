@@ -1,0 +1,13 @@
+<mat-card (click)="toggleLight()" class="device_{{getValue()}}">
+    <div fxLayout="row" fxLayoutAlign="center center"> 
+        <mat-card-title>{{ displayName }}</mat-card-title>
+    </div>
+    <div fxLayout="row" fxLayoutAlign="center center">                
+        <span class="device"><mat-icon inline="true">{{ getIcon() }}</mat-icon></span>  
+              
+    </div>  
+    <div fxLayout="row" fxLayoutAlign="space-between">                
+        <span class="info"><mat-icon inline="true"></mat-icon></span>     
+        <span class="info"><mat-icon inline="true">wifi</mat-icon></span>       
+    </div>             
+  </mat-card>
