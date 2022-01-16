@@ -5,6 +5,8 @@ export interface Device {
     data: {
         value: string | undefined;
         Temperature: string | undefined;
+        temperature: string | undefined;
+        LocalTemperature: string | undefined;
         BatteryPercentage: string | undefined;
     }
 

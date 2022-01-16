@@ -9,11 +9,15 @@ import { DeviceComponent } from '../device/device.component';
 export class DeviceTemperatureComponent extends DeviceComponent implements OnInit {
 
   getValue(): string | undefined{
-    return this.device?.data.Temperature;
+    if (this.device?.data.Temperature)        
+      return this.device?.data.Temperature;
+      if (this.device?.data.temperature)        
+      return this.device?.data.temperature;
+    if (this.device?.data.LocalTemperature)
+      return this.device?.data.LocalTemperature
+    return undefined;
   }
 
-  getBattery(): string | undefined{
-    return this.device?.data.BatteryPercentage;
-  }
+  
 
 }

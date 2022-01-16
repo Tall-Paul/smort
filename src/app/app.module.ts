@@ -18,6 +18,7 @@ import { DeviceOccupancyComponent } from './device-occupancy/device-occupancy.co
 import { HttpClientModule } from '@angular/common/http';
 import { DeviceComponent } from './device/device.component';
 import { OverviewLightsComponent } from './overview-lights/overview-lights.component';
+import { OverviewTemperatureComponent } from './overview-temperature/overview-temperature.component';
 
 
 
@@ -29,7 +30,8 @@ import { OverviewLightsComponent } from './overview-lights/overview-lights.compo
     DeviceTemperatureComponent,
     DeviceOccupancyComponent,
     DeviceComponent,
-    OverviewLightsComponent
+    OverviewLightsComponent,
+    OverviewTemperatureComponent
   ],
   imports: [
     BrowserModule,

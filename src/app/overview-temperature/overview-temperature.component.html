@@ -1,0 +1,12 @@
+<mat-expansion-panel>
+    <mat-expansion-panel-header class="room">
+      <mat-panel-title>
+        <mat-icon>thermostat_outline</mat-icon><span class="example-spacer"></span> Temperatures
+      </mat-panel-title>     
+    </mat-expansion-panel-header>
+    <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px">        
+          <app-device-temperature deviceName="AubreyTRV" displayName="Aubrey"></app-device-temperature>
+          <app-device-temperature deviceName="OfficeTemperature" displayName="Office"></app-device-temperature>     
+          <app-device-temperature deviceName="boiler" displayName="Thermostat"></app-device-temperature>    
+    </div>
+  </mat-expansion-panel>

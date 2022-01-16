@@ -41,6 +41,10 @@ export class DeviceComponent implements OnInit {
     }
   }
 
+  getBattery(): string | undefined{
+    return this.device?.data.BatteryPercentage;
+  }
+
   ngOnInit(): void {
     this.getDevice();    
   }
