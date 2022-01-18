@@ -3,6 +3,7 @@ import { empty } from 'rxjs';
 import { deviceUpdate } from '../device-update';
 import { Device } from './device';
 import { DevicesService } from '../devices.service';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-device',
@@ -17,7 +18,7 @@ export class DeviceComponent implements OnInit {
   @Input() deviceName='';
   @Input() displayName='';
 
-  constructor(private devicesService: DevicesService) {
+  constructor(private devicesService: DevicesService, protected httpClient: HttpClient) {
     this._subscription = this.devicesService.deviceUpdate.subscribe({
       next: (event: deviceUpdate) => {
         if (event.name === this.deviceName){
@@ -27,7 +28,9 @@ export class DeviceComponent implements OnInit {
     })
    }
 
-
+  doGetRequest(url: string){
+    return this.httpClient.get(url);
+  }
 
   getDevice(): void {
     if (this.interval) {

@@ -1,53 +1,13 @@
-<mat-toolbar color="primary">
+<!--<mat-toolbar color="primary">
   <span>Smort</span>
-</mat-toolbar>
+</mat-toolbar>-->
 
-
-<mat-accordion class="example-headers-align" multi="true">
-  <app-overview-lights></app-overview-lights>
-  <app-overview-temperature></app-overview-temperature>
-  <app-room-office></app-room-office>
+<mat-tab-group dynamicHeight>
+  <mat-tab label="Office"><app-room-office></app-room-office></mat-tab>
+  <mat-tab label="Lights">  <app-overview-lights></app-overview-lights> </mat-tab>
+  <mat-tab label="Temperatures"><app-overview-temperature></app-overview-temperature></mat-tab>
   
-  <mat-expansion-panel>
-    <mat-expansion-panel-header>
-      <mat-panel-title>
-        Living Room
-      </mat-panel-title>      
-    </mat-expansion-panel-header>
-    <p>This is the primary content of the panel.</p>
-  </mat-expansion-panel>
-  <mat-expansion-panel>
-    <mat-expansion-panel-header>
-      <mat-panel-title>
-        Play Room
-      </mat-panel-title>      
-    </mat-expansion-panel-header>
-    <p>This is the primary content of the panel.</p>
-  </mat-expansion-panel>
-  <mat-expansion-panel>
-    <mat-expansion-panel-header>
-      <mat-panel-title>
-        Dining Room
-      </mat-panel-title>      
-    </mat-expansion-panel-header>
-    <p>This is the primary content of the panel.</p>
-  </mat-expansion-panel>
-  <mat-expansion-panel>
-    <mat-expansion-panel-header>
-      <mat-panel-title>
-        Downstairs Loo
-      </mat-panel-title>      
-    </mat-expansion-panel-header>
-    <p>This is the primary content of the panel.</p>
-  </mat-expansion-panel>
-  <mat-expansion-panel>
-    <mat-expansion-panel-header>
-      <mat-panel-title>
-        Kitchen
-      </mat-panel-title>      
-    </mat-expansion-panel-header>
-    <p>This is the primary content of the panel.</p>
-  </mat-expansion-panel>  
-</mat-accordion>
+</mat-tab-group>
+
 
 <router-outlet></router-outlet>

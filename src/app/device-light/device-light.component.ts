@@ -4,6 +4,7 @@ import { deviceUpdate } from '../device-update';
 import { Device } from '../device/device';
 import { DeviceComponent } from '../device/device.component';
 import { DevicesService } from '../devices.service';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-device-light',
@@ -29,14 +30,18 @@ export class DeviceLightComponent extends DeviceComponent implements OnInit {
     return this.device?.data.value;
   }
 
+
+
   toggleLight(){
-    if (this.deviceState == "device_on"){
-        this.deviceState = "device_off";
-        this.deviceIcon = "hide_source";
+    let action: string = "";
+    let actionUrl: string = "http://nodered.home/action?targets="+this.deviceName;
+    if (this.device?.data.value == "on"){
+        action = "off";
     } else {
-      this.deviceState = "device_on";
-      this.deviceIcon = "light_mode";
+        action = "on";
     }
+    this.doGetRequest(actionUrl+"&action="+action).subscribe();
+
   }
 
   

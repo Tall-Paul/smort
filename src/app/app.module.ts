@@ -19,6 +19,9 @@ import { HttpClientModule } from '@angular/common/http';
 import { DeviceComponent } from './device/device.component';
 import { OverviewLightsComponent } from './overview-lights/overview-lights.component';
 import { OverviewTemperatureComponent } from './overview-temperature/overview-temperature.component';
+import {MatTabsModule} from '@angular/material/tabs';
+import { ControlLightComponent } from './control-light/control-light.component';
+import { ColorPickerModule } from '@iplab/ngx-color-picker';
 
 
 
@@ -31,14 +34,17 @@ import { OverviewTemperatureComponent } from './overview-temperature/overview-te
     DeviceOccupancyComponent,
     DeviceComponent,
     OverviewLightsComponent,
-    OverviewTemperatureComponent
+    OverviewTemperatureComponent,
+    ControlLightComponent
   ],
   imports: [
     BrowserModule,
+    ColorPickerModule,
     HttpClientModule,
     MatSliderModule,
     MatExpansionModule,
     MatToolbarModule,
+    MatTabsModule,
     MatIconModule,
     MatCardModule,
     AppRoutingModule,

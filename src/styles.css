@@ -26,5 +26,14 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   .device_on {
       opacity: 1;
   }
+
+  .mat-tab-body{
+      padding: 20px;
+  }
+
+  .devices {
+      padding-top: 10px;
+      padding-bottom: 10px;
+  }
   
 
