@@ -8,6 +8,7 @@ export interface Device {
         temperature: string | undefined;
         LocalTemperature: string | undefined;
         BatteryPercentage: string | undefined;
+        brightness: string | undefined;
     }
 
   }

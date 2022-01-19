@@ -22,6 +22,9 @@ import { OverviewTemperatureComponent } from './overview-temperature/overview-te
 import {MatTabsModule} from '@angular/material/tabs';
 import { ControlLightComponent } from './control-light/control-light.component';
 import { ColorPickerModule } from '@iplab/ngx-color-picker';
+import { DeviceGroupComponent } from './device-group/device-group.component';
+import { RoomHallComponent } from './room-hall/room-hall.component';
+
 
 
 
@@ -35,7 +38,9 @@ import { ColorPickerModule } from '@iplab/ngx-color-picker';
     DeviceComponent,
     OverviewLightsComponent,
     OverviewTemperatureComponent,
-    ControlLightComponent
+    ControlLightComponent,
+    DeviceGroupComponent,
+    RoomHallComponent
   ],
   imports: [
     BrowserModule,

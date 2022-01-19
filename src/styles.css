@@ -19,6 +19,10 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
   .card { cursor: pointer; }
 
+  .disabled {
+      opacity: 0.3;
+  }
+
   .device_off {
       opacity: 0.5;
   }
@@ -35,5 +39,18 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
       padding-top: 10px;
       padding-bottom: 10px;
   }
+
+  .brightness-slider {
+      width: 100%;
+  }
+
+  .white-slider {
+    width: 100%;
+}
   
+  .brightness-slider-label-container{
+      padding-top: 10px;
+  }
+
+
 

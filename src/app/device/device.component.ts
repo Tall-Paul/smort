@@ -17,8 +17,9 @@ export class DeviceComponent implements OnInit {
   device: Device | undefined;
   @Input() deviceName='';
   @Input() displayName='';
+  @Input() groupedDevices: string | undefined;
 
-  constructor(private devicesService: DevicesService, protected httpClient: HttpClient) {
+  constructor(protected devicesService: DevicesService, protected httpClient: HttpClient) {
     this._subscription = this.devicesService.deviceUpdate.subscribe({
       next: (event: deviceUpdate) => {
         if (event.name === this.deviceName){
@@ -28,19 +29,32 @@ export class DeviceComponent implements OnInit {
     })
    }
 
+  getTargets(): string{
+    let targets: string = this.deviceName;
+    if (this.groupedDevices !== undefined){
+      targets = this.deviceName+","+this.groupedDevices;
+    }
+    return targets;
+  }
+
   doGetRequest(url: string){
     return this.httpClient.get(url);
   }
 
-  getDevice(): void {
+  getDevice(control?: any): void {
     if (this.interval) {
       clearInterval(this.interval);
     }
-    this.device = this.devicesService.getDeviceByName(this.deviceName);
-    if (this.device == undefined){
+    this.device = this.devicesService.getDeviceByName(this.deviceName);    
+    if (typeof(this.device) === "undefined"){
       this.interval = setInterval(() => {
-        this.getDevice() ;
+        this.getDevice(control) ;
       }, 1000);
+    } else {
+      if (typeof(control) === "object"){
+        console.warn(this.device);
+        control.deviceLoaded();
+      }
     }
   }
 
