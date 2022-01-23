@@ -1,4 +1,4 @@
-<mat-card>
+<mat-card class="device-card">
     <div fxLayout="row" fxLayoutAlign="center center"> 
         <mat-card-title>{{displayName}}</mat-card-title>
     </div>
@@ -6,8 +6,8 @@
         <span class="device">{{getValue()}}</span>           
     </div>        
     <div fxLayout="row" fxLayoutAlign="space-between">                
-        <span class="info"><mat-icon inline="true">battery_full</mat-icon>{{getBattery()}}</span>     
-        <span class="info"><mat-icon inline="true">wifi</mat-icon></span>       
+        <span class="info"><mat-icon inline="true">battery_full</mat-icon>{{getBattery()}}%</span>     
+        <span class="info"><mat-icon inline="true">wifi</mat-icon>{{getLinkQuality()}}</span>       
     </div> 
   </mat-card>
 

@@ -9,6 +9,9 @@ export interface Device {
         LocalTemperature: string | undefined;
         BatteryPercentage: string | undefined;
         brightness: string | undefined;
+        Occupancy: string | undefined;
+        LinkQuality: string | undefined;
+        Dimmer: string | undefined;
     }
 
   }

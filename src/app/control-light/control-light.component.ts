@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { MatSlider, MatSliderChange } from '@angular/material/slider';
 import { Color, ColorPickerControl } from '@iplab/ngx-color-picker';
 import { empty, Observable } from 'rxjs';
@@ -16,6 +16,8 @@ export class ControlLightComponent extends DeviceComponent implements OnInit {
 
   @ViewChild('brightnessSlider')brightnessSlider: any;
   @ViewChild('whiteSlider')whiteSlider: any;
+  @Input() showColours: string = "true";
+  @Input() showBalance: string = "true";
   public compactControl = new ColorPickerControl();
   protected _colorChangeSubscription: any;
   private presets = ["#FF8100","#FF9227","#FFA757","#FFB16E","#FFD0AB","#FFE4CE","#FFEDDE","#FFFEFA",
@@ -24,7 +26,6 @@ export class ControlLightComponent extends DeviceComponent implements OnInit {
 
   deviceLoaded(): void{
     if (this.device?.data.brightness){
-      console.warn(this.device?.data.brightness);
       this.brightnessSlider.value = Number.parseInt(this.device?.data.brightness);
     }
     if (this.device?.data.temperature){
@@ -57,11 +58,13 @@ export class ControlLightComponent extends DeviceComponent implements OnInit {
   }
 
   getBrightness(){
-    return this.device?.data.brightness;
+    if (this.device?.data.brightness !== undefined)
+      return this.device?.data.brightness;
+    return undefined;
   }
 
   brightnessChange(){        
-    let targets: string = this.getTargets();    
+    let targets: string = this.getTargets();   
     let actionUrl: string = "http://nodered.home/action?targets="+targets+"&action=brightness&value="+this.brightnessSlider.value;
     this.doGetRequest(actionUrl).subscribe();    
   }

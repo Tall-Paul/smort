@@ -33,14 +33,15 @@ export class DeviceLightComponent extends DeviceComponent implements OnInit {
 
 
   toggleLight(){
-    let action: string = "";
-    let actionUrl: string = "http://nodered.home/action?targets="+this.deviceName;
+    let action: string = "";    
+    let targets: string = this.getTargets();
+    let actionUrl: string = "http://nodered.home/action?targets="+targets+"&action=switch&value="
     if (this.device?.data.value == "on"){
-        action = "off";
+        actionUrl += "off";
     } else {
-        action = "on";
+        actionUrl += "on";
     }
-    this.doGetRequest(actionUrl+"&action="+action).subscribe();
+    this.doGetRequest(actionUrl).subscribe();
 
   }
 

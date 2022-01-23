@@ -52,5 +52,14 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
       padding-top: 10px;
   }
 
+  .device-card {
+      width: 170px;
+      height: 100px;
+  }
+
+  .colour-picker-container {
+      height: 276px;
+  }
+
 
 

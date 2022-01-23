@@ -1,0 +1,749 @@
+[
+    {
+        "id": "373d924f25966c6c",
+        "type": "tab",
+        "label": "Lighting",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "4a841fd4251ab915",
+        "type": "mqtt in",
+        "z": "373d924f25966c6c",
+        "name": "Zigbee Mqtt messages",
+        "topic": "tele/tasmota_9DEA91/SENSOR",
+        "qos": "2",
+        "datatype": "auto",
+        "broker": "7005b237.e7d0dc",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "x": 220,
+        "y": 400,
+        "wires": [
+            [
+                "c6f55ba87440669c"
+            ]
+        ]
+    },
+    {
+        "id": "c6f55ba87440669c",
+        "type": "function",
+        "z": "373d924f25966c6c",
+        "name": "Zigbee Parser",
+        "func": "//node.warn(typeof(msg.payload));\ndata = {};\nif (typeof(msg.payload) === \"string\"){\n    data = JSON.parse(msg.payload);\n} else {\n    data = msg.payload;\n}\n\n\nmsg.payload={};\nreceived = data.ZbReceived;\nvalues = received[Object.keys(received)[0]];\nname = values.Name;\nif (name == undefined){\n    return null;\n}\nout = {};\nout.name = name;\ncurrent = new Date();\nout.target = \"zigbee\";\ndeviceClass=\"\";\nout.lastMessage = current.toLocaleString();\n\nif (name.includes(\"Switch\")){\n    out.deviceClass=\"switch\";\n    value = \"\";\n    sensor = \"\";\n    if (values.Power !== undefined){\n        type = \"action\";\n        sensor = \"button_press\";\n        if (values.Power == 2){\n            value = \"toggle\";\n        }\n        if (values.Power == 1){\n            value = \"on\";\n        }\n        if (values.Power == 0){\n            value = \"off\";\n        }\n        out.type = type;\n        out.data = {};\n        out.data.PressType = value;\n    } else if (values.DimmerStepUp !== undefined){\n            value = \"dimmerUp\";\n            out.type = \"action\";\n            out.data = {};\n            out.data.PressType = value;\n    } else if (values.DimmerStepDown !== undefined){\n            value = \"dimmerDown\";\n            out.type = \"action\";\n            out.data = {};\n            out.data.PressType = value;\n    } else {\n            out.type = \"state\";\n            out.data = values;\n    }\n} else if (name.includes(\"Light\")){\n    out.deviceClass = \"light\";\n    out.type = \"state\";\n    out.data = values;\n    if (values.Power !== undefined){\n        if (values.Power === 1){\n            value = \"on\";\n        } else {\n            value = \"off\";\n        }\n        out.data.value = value;\n    }\n} else {\n    out.deviceClass = \"sensor\";\n    out.type = \"state\";\n    out.data = values;\n}\nmsg.payload = out;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 520,
+        "y": 400,
+        "wires": [
+            [
+                "a021329f7d389497"
+            ]
+        ]
+    },
+    {
+        "id": "87fd05c66c6e3f9c",
+        "type": "mqtt out",
+        "z": "373d924f25966c6c",
+        "name": "Zigbee Command",
+        "topic": "cmnd/tasmota_9DEA91/ZbSend",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "7005b237.e7d0dc",
+        "x": 1730,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "ec6a7c3a17454bfd",
+        "type": "function",
+        "z": "373d924f25966c6c",
+        "name": "Store State",
+        "func": "state = global.get(\"deviceState\");\nif (state === undefined){\n    state = new Map();\n}\n\nrooms = global.get(\"rooms\");\nif (rooms === undefined){\n    rooms = new Map();\n}\n\n//normalise data\nif (typeof(msg.payload.data.Dimmer) !== \"undefined\"){\n    msg.payload.data.brightness = msg.payload.data.Dimmer * 4;\n}\n\n\n\n\n\n\noldDat = state.get(msg.payload.name);\nif (oldDat === undefined){\n    state.set(msg.payload.name,msg.payload);\n} else {\n    newDat = {};\n    newDat = Object.assign(oldDat.data,msg.payload.data);\n    msg.payload.data = newDat;\n    state.set(msg.payload.name,msg.payload);\n}\nglobal.set(\"deviceState\",state);\n\n\n\n\n//msg.payload=state;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1530,
+        "y": 660,
+        "wires": [
+            [
+                "529d42d44f196fe9"
+            ]
+        ]
+    },
+    {
+        "id": "125111bd747ee7d7",
+        "type": "switch",
+        "z": "373d924f25966c6c",
+        "name": "Message Type",
+        "property": "payload.type",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "action",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "state",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 900,
+        "y": 400,
+        "wires": [
+            [
+                "b6e8a3288464c1ab"
+            ],
+            [
+                "ec6a7c3a17454bfd"
+            ]
+        ]
+    },
+    {
+        "id": "bfe4efc7693205fa",
+        "type": "function",
+        "z": "373d924f25966c6c",
+        "name": "Actions",
+        "func": "function getState(target){\n    globalState = global.get(\"deviceState\");\n    if (globalState == undefined){\n        globalState = {};\n    }\n    return globalState.get(target);\n}\n\nfunction getTuyaDevice(target){\n    tuya = global.get(\"tuya\");\n     if (tuya == undefined){\n        return undefined;\n    }\n    return tuya.get(target);\n}\n\n\n\noutPutArray = [];\nMsgArray = [];\n\n//targets = getTargets(msg.payload.name);\ntargets = msg.payload.targets;\n\n//node.warn(targets);\nif (targets === []){\n    return null;\n} else { \n    for (var i = 0; i < targets.length; i++) {\n        outMsg = {}; //individual message object\n        target = targets[i];\n        targetAction = \"\";\n        targetValue = \"\";\n        currentValue = \"\";\n        currentBrightness = 0;\n        currentDeviceState = getState(target);\n        if (currentDeviceState !== undefined){\n            if (currentDeviceState.data.value !== undefined){\n                currentValue = currentDeviceState.data.value;\n            }\n            if (currentDeviceState.data.brightness !== undefined){\n                currentBrightness = currentDeviceState.data.brightness;\n            }\n            network = currentDeviceState.target;\n        } else {\n            network = \"zigbee\"; //because tuya devices report state when deploying, if we don't have previous state it must be a zigbee device\n        }\n     \n        if (currentDeviceState.deviceClass === \"light\"){\n            if (msg.payload.data.PressType){\n                targetAction = \"switch\";\n                if (msg.payload.data.PressType == \"toggle\"){\n                    if (currentValue == \"on\"){\n                        targetValue = 0;\n                    } else {\n                        targetValue = 1;\n                    }\n                } else if (msg.payload.data.PressType == \"off\"){\n                        targetValue = 0;\n                } else if (msg.payload.data.PressType == \"on\"){\n                        targetValue = 1;\n                } else if (msg.payload.data.PressType == \"dimmerUp\"){\n                    targetAction = \"brightness\";\n                    targetValue = currentBrightness + 200;\n                    if (targetValue >= 1000)\n                        targetValue = 1000;\n                }  else if (msg.payload.data.PressType == \"dimmerDown\"){\n                    targetAction = \"brightness\";\n                    targetValue = currentBrightness - 200;\n                    if (targetValue <= 0)\n                        targetValue = 0;\n                } \n            } else if (msg.payload.data.brightness){\n                targetAction = \"brightness\";       \n                targetValue = parseInt(msg.payload.data.brightness);\n            } else if (msg.payload.data.temperature){\n                targetAction = \"colour_temperature\";\n                targetValue = parseInt(msg.payload.data.temperature);\n            }\n        }\n        \n        \n        out = {};\n        if (network == \"zigbee\"){\n            outMsg.topic = \"zigbee\";\n            if (targetAction == \"switch\"){\n                out = {\"Device\":target,\"Send\":{\"Power\":targetValue}};\n            } else if (targetAction == \"brightness\"){\n                out = {\"Device\":target,\"Send\":{\"Dimmer\":targetValue / 4}};\n            }\n            outMsg.payload = out;\n        } else {\n            if (network == \"tuya\"){\n                tuyaPower = 0;\n                tuyadps = 0;\n                 outMsg.topic = \"tuya\";\n                 //node.warn(targetAction);\n                if (targetAction == \"switch\"){\n                    tuyadps = 20;\n                    if (targetValue == 1){\n                        tuyaPower = true;\n                        tuyadps = 20;\n                    } else if (targetValue == 0){\n                        tuyaPower = false;\n                        tuyadps = 20;\n                    }\n                } else if (targetAction == \"brightness\"){\n                    tuyadps = 22;\n                    tuyaPower = targetValue;\n                } else if (targetAction == \"colour_temperature\"){\n                    tuyadps = 23;\n                    tuyaPower = targetValue;\n                }\n                outMsg.payload = getTuyaDevice(target);\n                outMsg.payload.payload = {\"set\": tuyaPower,\"dps\": tuyadps};\n            }\n        }\n        MsgArray.push(outMsg);\n    }\n}\noutPutArray.push(MsgArray);\n\n//node.warn(outPutArray);\nreturn outPutArray;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1140,
+        "y": 280,
+        "wires": [
+            [
+                "3a865714ff20eba2"
+            ]
+        ]
+    },
+    {
+        "id": "a4edd2ea577e849c",
+        "type": "function",
+        "z": "373d924f25966c6c",
+        "name": "Map Switches to Buttons",
+        "func": "",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "// Code added here will be run once\n// whenever the node is started.\n\n\n//map switches to buttons\nmapping = new Map();\nmapping.set(\"HallSwitch1\",\"HallLight1,HallLight2\");\nmapping.set(\"HallSwitch2\",\"HallLight1,HallLight2\");\nmapping.set(\"SpareSwitch\",\"HallLight\");\nmapping.set(\"OfficeSwitch\",\"OfficeLight\");\nmapping.set(\"EdenSwitch\",\"EdenLight\");\nmapping.set(\"OfficeMotion\",\"OfficeSwitch\");\nglobal.set(\"mapping\",mapping);\n\ntuya = new Map();\n\ntuya.set(\"OfficeLight\",{\"deviceVirtualId\":\"\",\"deviceKey\":\"\",\"deviceIp\":\"\",\"deviceName\":\"OfficeLight\",\"version\":\"3.3\"});\ntuya.set(\"HallLight1\",{\"deviceVirtualId\":\"\",\"deviceKey\":\"\",\"deviceIp\":\"\",\"deviceName\":\"HallLight1\",\"version\":\"3.3\"});\ntuya.set(\"HallLight2\",{\"deviceVirtualId\":\"\",\"deviceKey\":\"\",\"deviceIp\":\"1\",\"deviceName\":\"HallLight2\",\"version\":\"3.3\"});\nglobal.set(\"tuya\",tuya);\n\n",
+        "finalize": "",
+        "libs": [],
+        "x": 190,
+        "y": 120,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "3a865714ff20eba2",
+        "type": "switch",
+        "z": "373d924f25966c6c",
+        "name": "Network Split",
+        "property": "topic",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "zigbee",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "tuya",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 1310,
+        "y": 280,
+        "wires": [
+            [
+                "87fd05c66c6e3f9c",
+                "585ef310d84d9456"
+            ],
+            [
+                "73b0d028dcfac7c8",
+                "2e47fc9d2b39749d"
+            ]
+        ]
+    },
+    {
+        "id": "c9d91c0a9337cdb4",
+        "type": "delay",
+        "z": "373d924f25966c6c",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "2",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "x": 1700,
+        "y": 180,
+        "wires": [
+            [
+                "87fd05c66c6e3f9c"
+            ]
+        ]
+    },
+    {
+        "id": "585ef310d84d9456",
+        "type": "function",
+        "z": "373d924f25966c6c",
+        "name": "Query Updated State",
+        "func": "dat = msg.payload\n\nsend = {};\nsend.endpoint = 1;\nsend.cluster = 6;\nsend.read = 0;\n\nmsg.payload.send = send;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1500,
+        "y": 180,
+        "wires": [
+            [
+                "c9d91c0a9337cdb4"
+            ]
+        ]
+    },
+    {
+        "id": "781342d7ae0e37ad",
+        "type": "http in",
+        "z": "373d924f25966c6c",
+        "name": "Prometheus request",
+        "url": "/metrics",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 230,
+        "y": 880,
+        "wires": [
+            [
+                "9f4023be633b2f00"
+            ]
+        ]
+    },
+    {
+        "id": "48197265237afc61",
+        "type": "http response",
+        "z": "373d924f25966c6c",
+        "name": "Prometheus response",
+        "statusCode": "200",
+        "headers": {
+            "Content-Type": "text/plain"
+        },
+        "x": 660,
+        "y": 880,
+        "wires": []
+    },
+    {
+        "id": "9f4023be633b2f00",
+        "type": "function",
+        "z": "373d924f25966c6c",
+        "name": "",
+        "func": "state = global.get(\"deviceState\");\nif (state === undefined){\n    state = new Map();\n}\n\nsmort_light_state =  \"# HELP light_state whether light is currently on or off\";\nsmort_light_state += \"\\n# TYPE light_state gauge\";\nsmort_device_battery =  \"\\n# HELP switch_battery current battery percentage\";\nsmort_device_battery +=  \"\\n# TYPE device_battery gauge\";\nsmort_zigbee_link_quality = \"\\n# HELP zigbee_link_quality current link quality on zigbee network\";\nsmort_zigbee_link_quality +=  \"\\n# TYPE device_battery gauge\";\nsmort_room_temperature =  \"\\n# TYPE temperature gauge\";\nsmort_room_humidity =  \"\\n# TYPE smort_room_humidity gauge\";\nsmort_room_light_level = \"\\n# TYPE smort_room_light_level gauge\";\nsmort_room_occupancy = \"\\n# TYPE smort_room_occupancy gauge\";\n\nfor (const [key, value] of state.entries()) {\n  if (typeof(value) !== \"undefined\"){\n      metric_label = key;\n      metric = -1;\n      switch (value.deviceClass){\n          case \"light\":\n              if (value.data.value === \"on\")\n                    metric = 1;\n              else \n                    metric = 0;\n              smort_light_state += \"\\nsmort_light_state{device=\\\"\"+key+\"\\\"} \"+metric;\n              break;\n          case \"sensor\":\n              if (typeof(value.data.Temperature) !== \"undefined\"){\n                  smort_room_temperature += \"\\nsmort_room_temperature{device=\\\"\"+key+\"\\\"} \"+value.data.Temperature;\n              }\n              if (typeof(value.data.Humidity) !== \"undefined\"){\n                  smort_room_humidity += \"\\nsmort_room_humidity{device=\\\"\"+key+\"\\\"} \"+value.data.Humidity;\n              }\n              if (typeof(value.data.Illuminance) !== \"undefined\"){\n                  smort_room_light_level += \"\\nsmort_room_light_level{device=\\\"\"+key+\"\\\"} \"+value.data.Illuminance;\n              }\n              break;\n      }\n      if (value.target == \"zigbee\"){\n          smort_zigbee_link_quality += \"\\nsmort_zigbee_link_quality{device=\\\"\"+key+\"\\\"} \"+value.data.LinkQuality;\n      }\n   }\n}\nmsg.payload = smort_light_state;\nmsg.payload += smort_zigbee_link_quality;\nmsg.payload += smort_room_temperature;\nmsg.payload += smort_room_humidity;\nmsg.payload += smort_room_light_level;\n\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 430,
+        "y": 880,
+        "wires": [
+            [
+                "48197265237afc61"
+            ]
+        ]
+    },
+    {
+        "id": "11141bcb293a6861",
+        "type": "function",
+        "z": "373d924f25966c6c",
+        "name": "Check Motion",
+        "func": "\n\nstate = global.get(\"deviceState\");\nif (state === undefined){\n    state = new Map();\n}\nisNight = 0;\nif (global.get(\"isNight\") === true){\n    isNight = 1;\n} else {\n    isNight = 0;\n}\n\n//node.warn(\"checking motion\");\n\n\nfor (const [key, value] of state.entries()) {\n  trigger = null;\n  if (typeof(value) !== \"undefined\"){\n      if (typeof(value.data.lastfired) === \"undefined\" && typeof(value.data.Occupancy) !== \"undefined\")\n        value.data.lastfired = value.data.Occupancy;\n\n      if (value.deviceClass === \"sensor\"){\n           if (typeof(value.data.Occupancy) !== \"undefined\"){\n               //check timer\n               lastMessage = Date.parse(value.lastMessage);\n               elapsed = Date.now() - lastMessage;\n               //node.warn(elapsed);\n               //node.warn(value.data.Occupancy);\n               //node.warn(isNight);\n               if (elapsed > 300000){\n                   if (value.data.Occupancy == 0  && value.data.lastfired == 1){\n                       //node.warn(\"switch light off\");\n                       value.data.lastfired = 0;\n                       trigger = 0;\n                   }\n               } else {\n                   if (value.data.Occupancy == 1 && value.data.lastfired == 0 && value.data.Illuminance <= 25){\n                        //node.warn(\"switch light on\");\n                        trigger = 1;\n                        value.data.lastfired = 1;\n                    }\n               }\n           }\n        if (trigger !== null){ //TODO fix for multiple targets / devices\n            mapping = global.get(\"mapping\");\n            target = mapping.get(value.name);\n            out = {};\n            out.ZbReceived = {};\n            out.ZbReceived.switch = {};\n            out.ZbReceived.switch.Name = target;\n            out.ZbReceived.switch.Power = trigger;\n            msg.payload = out;\n           return msg;\n        }\n      }\n      \n   }\n}\n\nreturn null;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 520,
+        "y": 300,
+        "wires": [
+            [
+                "c6f55ba87440669c"
+            ]
+        ]
+    },
+    {
+        "id": "aab4ca752d69fca9",
+        "type": "function",
+        "z": "373d924f25966c6c",
+        "name": "Tuya State",
+        "func": "\nout = {};\nout.target = \"tuya\";\nout.type = \"state\";\nout.data = {};\nif (typeof(msg.payload) === \"undefined\")\n    return null;\nout.name = msg.payload.deviceName;\nout.deviceClass = \"light\";\n\n/*\nif (typeof(msg.payload.payload) !== \"undefined\"){\n    if (typeof(msg.payload.payload.dps) !== \"undefined\"){\n        dps = msg.payload.payload.dps;\n        value = msg.payload.payload.set;\n        switch (dps){\n            case \"20\":\n                if (value == true){\n                    out.data.value = \"on\";\n                } else {\n                    out.data.value = \"off\";\n                }\n            break\n            case \"22\":\n                out.data.brightness = value;\n            break\n            case \"23\":\n                out.data.temperature = value;\n            default:\n                node.warn(dps+\": \"+value);\n            break\n        }\n    }\n}\n*/\n\n\nif (typeof(msg.payload.data) !== \"undefined\"){\n    if (typeof(msg.payload.data.dps) !== \"undefined\"){\n        dps = Object.keys(msg.payload.data.dps)[0];\n        value = msg.payload.data.dps[Object.keys(msg.payload.data.dps)[0]];\n        switch (dps){\n            case \"20\":\n                if (value == true){\n                    out.data.value = \"on\";\n                } else {\n                    out.data.value = \"off\";\n                }\n            break\n            case \"22\":\n                out.data.brightness = value;\n            break\n            case \"23\":\n                out.data.temperature = value;\n            default:\n                node.warn(dps+\": \"+value);\n            break\n        }\n    }\n}\n    \n    \n    \n/*    \n    if (msg.payload.on === true){\n        state = \"on\";\n    } else {\n        state = \"off\";\n    }\n    out.data.value = state;\n}\n\nif (typeof(msg.payload.brightness) !== \"undefined\"){\n    out.data.brightness = msg.payload.brightness;\n}\nif (typeof(msg.payload.temperature) !== \"undefined\"){\n    out.data.temperature = msg.payload.temperature;\n}\n*/\n\n\nmsg.payload = out;\n\nreturn msg;\n\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 2030,
+        "y": 380,
+        "wires": [
+            [
+                "ec6a7c3a17454bfd"
+            ]
+        ]
+    },
+    {
+        "id": "32841ecf0d72edfc",
+        "type": "http in",
+        "z": "373d924f25966c6c",
+        "name": "GET Device",
+        "url": "/device",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 210,
+        "y": 940,
+        "wires": [
+            [
+                "d9fd0b867ef41e80"
+            ]
+        ]
+    },
+    {
+        "id": "68f039821c1af11a",
+        "type": "http response",
+        "z": "373d924f25966c6c",
+        "name": "GET Device response",
+        "statusCode": "200",
+        "headers": {
+            "content-type": "application/json"
+        },
+        "x": 660,
+        "y": 940,
+        "wires": []
+    },
+    {
+        "id": "d9fd0b867ef41e80",
+        "type": "function",
+        "z": "373d924f25966c6c",
+        "name": "",
+        "func": "state = global.get(\"deviceState\");\nif (typeof(state) === \"undefined\"){\n    state = new Map();\n}\ndevice = state.get(msg.payload.devicename);\nmsg.payload = device;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 420,
+        "y": 940,
+        "wires": [
+            [
+                "68f039821c1af11a"
+            ]
+        ]
+    },
+    {
+        "id": "50ad66215d0e50ab",
+        "type": "inject",
+        "z": "373d924f25966c6c",
+        "name": "Poller",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "30",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "1",
+        "topic": "",
+        "payload": "{\"ZbReceived\":{\"DummyPoller\":{\"Device\":\"0x0000\",\"Name\":\"DummyPoller\",\"polling\":true,\"LinkQuality\":50}}}",
+        "payloadType": "json",
+        "x": 200,
+        "y": 480,
+        "wires": [
+            [
+                "c6f55ba87440669c",
+                "c6a873ca79faf05f",
+                "554da9651bd75121"
+            ]
+        ]
+    },
+    {
+        "id": "c6a873ca79faf05f",
+        "type": "homestatus",
+        "z": "373d924f25966c6c",
+        "name": "Boiler",
+        "auth": "b0b9a48b10b5f256",
+        "home_id": "61b20b088b765345652eb836",
+        "device_types": "",
+        "x": 390,
+        "y": 560,
+        "wires": [
+            [
+                "1c52633fc2316153"
+            ]
+        ]
+    },
+    {
+        "id": "1c52633fc2316153",
+        "type": "function",
+        "z": "373d924f25966c6c",
+        "name": "Boiler data",
+        "func": "out = {};\nout.name = \"boiler\";\nout.target = \"netatmo\";\ndeviceClass=\"thermostat\";\ncurrent = new Date();\nout.lastMessage = current.toLocaleString();\nout.data = {};\nout.data.setpoint = msg.payload.home.rooms[0].therm_setpoint_temperature;\nout.data.temperature = msg.payload.home.rooms[0].therm_measured_temperature;\nif (msg.payload.home.modules[1].boiler_status == true){\n    out.data.value = \"on\";    \n} else {\n    out.data.value = \"off\";\n}\nmsg.payload = out;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 600,
+        "y": 560,
+        "wires": [
+            [
+                "ec6a7c3a17454bfd"
+            ]
+        ]
+    },
+    {
+        "id": "7dd588e3ae42eea8",
+        "type": "http in",
+        "z": "373d924f25966c6c",
+        "name": "GET Devices",
+        "url": "/devices",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 210,
+        "y": 1000,
+        "wires": [
+            [
+                "8de1d94c99cd0a5a"
+            ]
+        ]
+    },
+    {
+        "id": "8de1d94c99cd0a5a",
+        "type": "function",
+        "z": "373d924f25966c6c",
+        "name": "",
+        "func": "//node.warn(\"request received\");\n\nstate = global.get(\"deviceState\");\nif (typeof(state) === \"undefined\"){\n    state = new Map();\n}\nconst out = [];\nstate.forEach((value, name) => out.push(value));\nmsg.payload = out;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 420,
+        "y": 1000,
+        "wires": [
+            [
+                "e7bc31dc18a4fd44"
+            ]
+        ]
+    },
+    {
+        "id": "e7bc31dc18a4fd44",
+        "type": "http response",
+        "z": "373d924f25966c6c",
+        "name": "GET Devices response",
+        "statusCode": "200",
+        "headers": {
+            "content-type": "application/json"
+        },
+        "x": 670,
+        "y": 1000,
+        "wires": []
+    },
+    {
+        "id": "43a5bb5249a28ce7",
+        "type": "websocket out",
+        "z": "373d924f25966c6c",
+        "name": "WS out",
+        "server": "c632900b79699901",
+        "client": "",
+        "x": 1900,
+        "y": 660,
+        "wires": []
+    },
+    {
+        "id": "529d42d44f196fe9",
+        "type": "rbe",
+        "z": "373d924f25966c6c",
+        "name": "de-dupe",
+        "func": "rbe",
+        "gap": "",
+        "start": "",
+        "inout": "out",
+        "septopics": true,
+        "property": "payload",
+        "topi": "topic",
+        "x": 1720,
+        "y": 660,
+        "wires": [
+            [
+                "43a5bb5249a28ce7"
+            ]
+        ]
+    },
+    {
+        "id": "b6e8a3288464c1ab",
+        "type": "function",
+        "z": "373d924f25966c6c",
+        "name": "getTargets",
+        "func": "function getTargets(sourceName){\n    mapping = global.get(\"mapping\");\n    targetString = mapping.get(msg.payload.name);\n    //node.warn(targetString);\n    if (typeof(targetString) === \"undefined\"){\n        return [];\n    } else {\n        return targetString.split(\",\");\n    }\n}\ntargets = getTargets(msg.payload.name);\nmsg.payload.targets = targets;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 970,
+        "y": 280,
+        "wires": [
+            [
+                "bfe4efc7693205fa"
+            ]
+        ]
+    },
+    {
+        "id": "bc068915b871f0a2",
+        "type": "http in",
+        "z": "373d924f25966c6c",
+        "name": "GET Action",
+        "url": "/action",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 510,
+        "y": 100,
+        "wires": [
+            [
+                "b00b452729803bde"
+            ]
+        ]
+    },
+    {
+        "id": "b00b452729803bde",
+        "type": "function",
+        "z": "373d924f25966c6c",
+        "name": "WebAction",
+        "func": "state = global.get(\"deviceState\");\nif (typeof(state) === \"undefined\"){\n    state = new Map();\n}\n\ntargetString = msg.payload.targets;\naction = msg.payload.action;\nvalue = msg.payload.value;\nmsg.payload = {};\nmsg.payload.deviceClass = \"switch\";\n\ntargets = [];\nif (typeof(targetString) === \"undefined\"){\n    return null;\n} else {\n       msg.payload.targets = targetString.split(\",\");\n}\nif (typeof(action) === \"undefined\"){\n    return null;\n} else {\n    if (action == \"switch\"){\n        msg.payload.data = {};\n        msg.payload.data.PressType = value;\n    } else if (action == \"brightness\"){\n        msg.payload.data = {};\n        msg.payload.data.brightness = value;\n    } else if (action == \"colour_temperature\") {\n        msg.payload.data = {};\n        msg.payload.data.temperature = value;\n    }\n}\n\n\nnode.warn(msg.payload);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 730,
+        "y": 120,
+        "wires": [
+            [
+                "109b3893b55ae327",
+                "bfe4efc7693205fa"
+            ]
+        ]
+    },
+    {
+        "id": "109b3893b55ae327",
+        "type": "http response",
+        "z": "373d924f25966c6c",
+        "name": "Action Response",
+        "statusCode": "200",
+        "headers": {
+            "content-type": "application/json"
+        },
+        "x": 950,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "554da9651bd75121",
+        "type": "www-request",
+        "z": "373d924f25966c6c",
+        "name": "",
+        "method": "GET",
+        "ret": "obj",
+        "url": "http://prometheus.home/api/v1/query?query=node_ipmi_temperature_celsius{sensor=%22Temp%201%22}",
+        "follow-redirects": true,
+        "persistent-http": true,
+        "tls": "",
+        "x": 390,
+        "y": 480,
+        "wires": [
+            [
+                "cd5c32a774e94aa3"
+            ]
+        ]
+    },
+    {
+        "id": "cd5c32a774e94aa3",
+        "type": "function",
+        "z": "373d924f25966c6c",
+        "name": "ServerRoom",
+        "func": "temp = -1;\n\nif (typeof(msg.payload.status) === \"string\" && msg.payload.status == \"success\"){\n    temp = msg.payload.data.result[0].value[1];\n}\n\nmsg.payload = {};\nmsg.payload.ZbReceived = {};\nmsg.payload.ZbReceived.ServerRoomTemperature = {};\nmsg.payload.ZbReceived.ServerRoomTemperature.Device = \"0x0000\";\nmsg.payload.ZbReceived.ServerRoomTemperature.Name = \"ServerRoomTemperature\";\nmsg.payload.ZbReceived.ServerRoomTemperature.temperature = temp;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 570,
+        "y": 480,
+        "wires": [
+            [
+                "c6f55ba87440669c"
+            ]
+        ]
+    },
+    {
+        "id": "2e47fc9d2b39749d",
+        "type": "tuya-smart-device-generic",
+        "z": "373d924f25966c6c",
+        "name": "Tuya Command",
+        "eventMode": "event-both",
+        "x": 1720,
+        "y": 360,
+        "wires": [
+            [
+                "aab4ca752d69fca9",
+                "260812f5be52ed22"
+            ]
+        ]
+    },
+    {
+        "id": "a021329f7d389497",
+        "type": "rbe",
+        "z": "373d924f25966c6c",
+        "name": "de-dupe",
+        "func": "rbe",
+        "gap": "",
+        "start": "",
+        "inout": "out",
+        "septopics": true,
+        "property": "payload",
+        "topi": "topic",
+        "x": 700,
+        "y": 400,
+        "wires": [
+            [
+                "11141bcb293a6861",
+                "125111bd747ee7d7"
+            ]
+        ]
+    },
+    {
+        "id": "73b0d028dcfac7c8",
+        "type": "trigger",
+        "z": "373d924f25966c6c",
+        "name": "",
+        "op1": "",
+        "op2": "",
+        "op1type": "nul",
+        "op2type": "pay",
+        "duration": "2",
+        "extend": false,
+        "overrideDelay": false,
+        "units": "s",
+        "reset": "",
+        "bytopic": "all",
+        "topic": "topic",
+        "outputs": 1,
+        "x": 1480,
+        "y": 360,
+        "wires": [
+            [
+                "2e47fc9d2b39749d"
+            ]
+        ]
+    },
+    {
+        "id": "260812f5be52ed22",
+        "type": "change",
+        "z": "373d924f25966c6c",
+        "name": "reset",
+        "rules": [
+            {
+                "t": "set",
+                "p": "reset",
+                "pt": "msg",
+                "to": "true",
+                "tot": "bool"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1730,
+        "y": 440,
+        "wires": [
+            [
+                "73b0d028dcfac7c8"
+            ]
+        ]
+    },
+    {
+        "id": "7005b237.e7d0dc",
+        "type": "mqtt-broker",
+        "name": "rabbit",
+        "broker": "rabbit.home",
+        "port": "1883",
+        "clientid": "nodered",
+        "usetls": false,
+        "compatmode": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "sessionExpiry": ""
+    },
+    {
+        "id": "b0b9a48b10b5f256",
+        "type": "netatmoconfig",
+        "client_id": "",
+        "client_secret": "",
+        "username": "",
+        "password": ""
+    },
+    {
+        "id": "c632900b79699901",
+        "type": "websocket-listener",
+        "path": "/ws/smort",
+        "wholemsg": "false"
+    }
+]
