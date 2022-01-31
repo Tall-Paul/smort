@@ -1,14 +1,28 @@
 <!--<mat-toolbar color="primary">
   <span>Smort</span>
 </mat-toolbar>-->
+<div fxLayout="row">   
+  <div fxLayout="column">
+    <mat-card>
+      <app-device-video></app-device-video>
+      <app-device-clock></app-device-clock>
+      <div class="google-calendar">
+        <iframe src="https://calendar.google.com/calendar/embed?height=300&wkst=1&bgcolor=%23ffffff&ctz=Europe%2FLondon&showNav=1&showTitle=0&showDate=0&showTabs=0&showPrint=0&showCalendars=0&showTz=0&mode=AGENDA&hl=en_GB&src=ZDR1aTRobWtsOG9tZDk0aWRwYXY0YWhyN2NAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ&color=%238E24AA" style="border-width:0" width="300" height="300" frameborder="0" scrolling="no"></iframe>
+      </div>
+    </mat-card>
+     
+  </div>
+  <div fxLayout="column" class="room-column">
+    <mat-tab-group dynamicHeight>
+      <mat-tab label="Office"><app-room-office></app-room-office></mat-tab>
+      <mat-tab label="Hall"><app-room-hall></app-room-hall></mat-tab>
+      <mat-tab label="Lights">  <app-overview-lights></app-overview-lights> </mat-tab>
+      <mat-tab label="Temperatures"><app-overview-temperature></app-overview-temperature></mat-tab>
+    </mat-tab-group>
+  </div>
+</div>
+   
 
-<mat-tab-group dynamicHeight>
-  <mat-tab label="Office"><app-room-office></app-room-office></mat-tab>
-  <mat-tab label="Hall"><app-room-hall></app-room-hall></mat-tab>
-  <mat-tab label="Lights">  <app-overview-lights></app-overview-lights> </mat-tab>
-  <mat-tab label="Temperatures"><app-overview-temperature></app-overview-temperature></mat-tab>
-  
-</mat-tab-group>
 
 
 <router-outlet></router-outlet>

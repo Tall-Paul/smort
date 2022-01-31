@@ -1,19 +1,20 @@
 
-  <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px" class="devices">   
-    <div fxLayout="column"><!--controls-->
-      <app-control-light deviceName="OfficeLight" displayName="Main Light"></app-control-light>
-    </div>
-    <div fxLayout="column"><!--devices-->
-      <mat-card>
-      <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px" class="devices">
-        <app-device-occupancy displayName="Occupancy" deviceName="OfficeMotion" ></app-device-occupancy>
-      </div>
-        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px" class="devices">
-          <app-device-temperature deviceName="OfficeTemperature" displayName="Temperature"></app-device-temperature>
-      </div> 
-    </mat-card> 
-    </div>
-  </div>
+<div fxLayout="row">   
+ <div fxLayout="column" class="single-width" >
+  <app-control-light deviceName="OfficeLight" displayName="Main Light" showColours="false"></app-control-light>
+  
+ </div>
+ <div fxLayout="column" class="single-width" >
+  <app-control-temperature deviceName="OfficeTemperature" displayName="Temperature"></app-control-temperature>
+</div>
+<div fxLayout="column" class="single-width" >
+  <app-device-occupancy displayName="Occupancy" deviceName="OfficeMotion" ></app-device-occupancy>
+</div>
+</div>
+
+
+
+  
 
 
 

@@ -18,6 +18,7 @@ export class DeviceComponent implements OnInit {
   @Input() deviceName='';
   @Input() displayName='';
   @Input() groupedDevices: string | undefined;
+  @Input() format='full';
 
   constructor(protected devicesService: DevicesService, protected httpClient: HttpClient) {
     this._subscription = this.devicesService.deviceUpdate.subscribe({

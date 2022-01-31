@@ -77,7 +77,7 @@ export class ControlLightComponent extends DeviceComponent implements OnInit {
 
   getIcon(): string{
     if (this.device?.data.value === "on"){
-      return "light_mode";
+      return "tungsten";
     } else {
       return "hide_source";
     }

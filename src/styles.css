@@ -1,7 +1,17 @@
 /* You can add global styles to this file, and also import other style files */
 
+  /* latin */
+  @font-face {
+    font-family: 'Orbitron';
+    font-style: normal;
+    font-weight: 400;
+    src: url(https://fonts.gstatic.com/s/orbitron/v19/yMJMMIlzdpvBhQQL_SC3X9yhF25-T1nyGy6BoWgz.woff2) format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  }
+
 html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+body { margin: 0; font-family: Orbitron, Roboto, "Helvetica Neue", sans-serif; }
+
 .example-spacer {
     flex: 0.01 1 auto;
   }
@@ -31,10 +41,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
       opacity: 1;
   }
 
-  .mat-tab-body{
-      padding: 20px;
-  }
-
+ 
   .devices {
       padding-top: 10px;
       padding-bottom: 10px;
@@ -50,10 +57,15 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   
   .brightness-slider-label-container{
       padding-top: 10px;
+      padding-left: 10px;
+  }
+
+  .white-slider-label-container {
+      padding-left: 10px;
   }
 
   .device-card {
-      width: 170px;
+      width: 120px;
       height: 100px;
   }
 
@@ -61,5 +73,112 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
       height: 276px;
   }
 
+  #wrap {
+    width: 300px;
+    height: 200px;
+    padding: 0;
+    margin:5px;
+    overflow: hidden;
+    margin-left:19px;
+    margin-top: 0px;
+  }
+  
+  #scaled-frame {
+    width: 1800px;
+    height: 2000px;
+    border: 1px;
+    border-radius: 25px;
+  }
+  
+  #scaled-frame {
+    zoom: 0.40;
+    -moz-transform: scale(0.40);
+    -moz-transform-origin: 0 0;
+    -o-transform: scale(0.40);
+    -o-transform-origin: 0 0;
+    -webkit-transform: scale(0.40);
+    -webkit-transform-origin: 0 0;
+  }
+
+  .controls {
+      padding: 2px;
+  }
+
+
+
+  
+.clock-container{
+    margin-top:15px;
+    margin-bottom: 20px;
+    padding-left:19px;
+    font-size: 60px;
+    color: black;
+    height: 100%;
+    font-weight: 500;
+    font-family: 'Orbitron';
+}
+
+.date-container {
+    font-weight: 500;
+    font-family: 'Orbitron';    
+}
+
+.day-container {
+    font-weight: 500;
+    font-family: 'Orbitron';
+    margin-top:15px;
+}
+
+.google-calendar {
+    margin-top:10px;
+    margin-left: 15px;
+}
+
+.room-column {
+    width: 600px;
+}
+
+.devices {
+    overflow: scroll;
+    padding-top: 0px;
+}
+
+.single-height {
+    height: 200px;
+}
+
+.double-height {
+    height: 400px;
+}
+
+.single-width {
+    width: 200px;
+    padding: 7px;
+}
+
+.single-width mat-card{
+    width: 150px;
+    margin-bottom: 10px;
+}
+
+mat-card.control {
+    width: 130px;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-bottom: 0px;
+}
+
+.white-controls{
+    width: 175px;    
+}
+
+.white-controls-header{
+    height:20px;
+    line-height: 15px;
+}
+
+.white-controls .mat-expansion-panel-body{
+    padding: 0px;
+}
 
 

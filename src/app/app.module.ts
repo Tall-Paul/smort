@@ -24,6 +24,9 @@ import { ControlLightComponent } from './control-light/control-light.component';
 import { ColorPickerModule } from '@iplab/ngx-color-picker';
 import { DeviceGroupComponent } from './device-group/device-group.component';
 import { RoomHallComponent } from './room-hall/room-hall.component';
+import { DeviceVideoComponent } from './device-video/device-video.component';
+import { DeviceClockComponent } from './device-clock/device-clock.component';
+import { ControlTemperatureComponent } from './control-temperature/control-temperature.component';
 
 
 
@@ -40,7 +43,10 @@ import { RoomHallComponent } from './room-hall/room-hall.component';
     OverviewTemperatureComponent,
     ControlLightComponent,
     DeviceGroupComponent,
-    RoomHallComponent
+    RoomHallComponent,
+    DeviceVideoComponent,
+    DeviceClockComponent,
+    ControlTemperatureComponent
   ],
   imports: [
     BrowserModule,

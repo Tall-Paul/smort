@@ -1,0 +1,36 @@
+<mat-card>
+    <mat-card-title>{{displayName}}</mat-card-title>
+    
+       
+    
+    <div fxLayout="row" fxLayoutAlign="center center">  
+        <app-device-temperature format="small"  deviceName="{{deviceName}}" displayName="{{displayName}}"></app-device-temperature>                     
+     </div>               
+     <div fxLayout="row" fxLayoutAlign="center center">   
+                <mat-expansion-panel class="white-controls">  
+                    <mat-expansion-panel-header class="white-controls-header">
+                        <mat-panel-title>
+                        
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>    
+                    <div fxLayout="row" fxLayoutAlign="start center">          
+                        <label  class="example-name-label">SetPoint (boiler)</label>
+                    </div>
+                
+               <div fxLayout="row" fxLayoutAlign="center center">      
+                   <app-device-temperature format="setpoint"  deviceName="{{setPointDevice}}" displayName="setPoint"></app-device-temperature>
+               </div>
+        
+                <div fxLayout="row" fxLayoutAlign="start center">          
+                    <label  class="example-name-label">Demand (boiler)</label>
+               </div>
+               <div fxLayout="row" fxLayoutAlign="center center">      
+                   <span class="device">ON</span>
+               </div>
+                </mat-expansion-panel>     
+    </div>    
+    
+    </mat-card>
+    
+
+    
