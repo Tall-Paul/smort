@@ -1,0 +1,20 @@
+<div fxLayout="row" fxLayoutAlign="center center">   
+<mat-expansion-panel class="white-controls">  
+    <mat-expansion-panel-header class="white-controls-header">
+        <mat-panel-title>
+        
+        </mat-panel-title>
+    </mat-expansion-panel-header>    
+    <div class="brightness-slider-label-container">
+        <label  class="example-name-label">Brightness</label>
+
+    </div>
+    <mat-slider min="1" max="1000" step="10" #brightnessSlider aria-label="brightness" (valueChange)="brightnessChange()" class="brightness-slider"></mat-slider>
+
+    <div class="white-slider-label-container">
+        <label  class="example-name-label">White Temperature</label>
+
+    </div>
+    <mat-slider min="1" max="1000" step="10" #whiteSlider aria-label="Colour Temperature" (valueChange)="whiteChange()" class="white-slider"></mat-slider>
+</mat-expansion-panel>    
+</div> 

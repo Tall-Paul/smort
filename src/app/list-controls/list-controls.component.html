@@ -1,0 +1,5 @@
+<div class="container">
+<div *ngFor="let control of controls | async; let i = index;">
+    <app-control controlName="{{ control.name }}"></app-control>
+</div>
+</div>

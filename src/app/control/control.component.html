@@ -1,0 +1,10 @@
+
+<div class="control-wrapper"> <span class="bookmark" (click)="toggleBookmark()"><mat-icon inline="true"> {{ bookmarkIcon }}</mat-icon></span>
+<app-control-light  *ngIf="getType() == 'Light'"
+            deviceName="{{ getPrimaryDevice() }}" 
+            groupedDevices="{{ getGroupedDevices() }}" 
+            switchDeviceName="{{ getOnOffDevice() }}"
+            displayName="{{getName()}}" showColours="false">
+</app-control-light> 
+</div>
+

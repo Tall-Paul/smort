@@ -156,10 +156,19 @@ body { margin: 0; font-family: Orbitron, Roboto, "Helvetica Neue", sans-serif; }
     padding: 7px;
 }
 
-.single-width mat-card{
+.container mat-card{
     width: 150px;
-    margin-bottom: 10px;
+    float: left;
+    margin: 5px;
+    min-height: 105px;
 }
+
+.control-wrapper {
+    width: 185px;
+    float: left;    
+    
+}
+
 
 mat-card.control {
     width: 130px;
@@ -179,6 +188,22 @@ mat-card.control {
 
 .white-controls .mat-expansion-panel-body{
     padding: 0px;
+}
+
+.container {
+    width: 100%;
+}
+
+.bookmark{
+    font-size: 27px;
+    line-height: 0;
+    float: right;
+    vertical-align: text-top;
+    margin-top: 10px;
+    margin-bottom: -30px;
+    position: relative;
+    z-index: 10;
+
 }
 
 

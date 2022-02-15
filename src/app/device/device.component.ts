@@ -26,13 +26,14 @@ export class DeviceComponent implements OnInit {
         if (event.name === this.deviceName){
           this.getDevice();
         }
+        return event;
       }
     })
    }
 
   getTargets(): string{
     let targets: string = this.deviceName;
-    if (this.groupedDevices !== undefined){
+    if (this.groupedDevices !== undefined && this.groupedDevices !== ""){
       targets = this.deviceName+","+this.groupedDevices;
     }
     return targets;
@@ -76,5 +77,6 @@ export class DeviceComponent implements OnInit {
         clearInterval(this.interval);
     }
   }
+
 
 }

@@ -1,17 +1,9 @@
-
-    <div fxLayout="row">   
-      <div fxLayout="column" class="single-width" >
-            <app-control-light deviceName="OfficeLight" displayName="Office" showColours="false"></app-control-light>
-            <app-control-light deviceName="LandingLightFront" displayName="Landing" showColours="false"></app-control-light>
-       
-      </div>
-      <div fxLayout="column" class="single-width" >
-            <app-control-light deviceName="HallLight1" groupedDevices="HallLight2" displayName="Hall" showColours="false"></app-control-light> 
-            <app-control-light deviceName="MainBedroomLight" displayName="Main" showColours="false"></app-control-light>  
-     </div>
-     <div fxLayout="column" class="single-width" >
+<div class="container">
+      <app-control-light deviceName="OfficeLight" displayName="Office" showColours="false"></app-control-light>
+      <app-control-light deviceName="LandingLightFront" switchDeviceName="LandingSwitchMiddle" displayName="Landing" showColours="false"></app-control-light>
+      <app-control-light deviceName="LandingLightBack" switchDeviceName="LandingSwitchMiddle_3" displayName="Rear Landing" showColours="false"></app-control-light>  
+      <app-control-light deviceName="HallLight1" groupedDevices="HallLight2" switchDeviceName="LandingSwitchMiddle_3"  displayName="Hall" showColours="false"></app-control-light> 
+      <app-control-light deviceName="MainBedroomLight" displayName="Main" showColours="false"></app-control-light>  
       <app-control-light deviceName="EdenLight" displayName="Eden" showColours="false"></app-control-light>  
       <app-control-light deviceName="PlayroomLight" displayName="Playroom" showColours="false"></app-control-light>  
-     </div>
-     </div>
-
+</div>

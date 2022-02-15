@@ -27,6 +27,12 @@ import { RoomHallComponent } from './room-hall/room-hall.component';
 import { DeviceVideoComponent } from './device-video/device-video.component';
 import { DeviceClockComponent } from './device-clock/device-clock.component';
 import { ControlTemperatureComponent } from './control-temperature/control-temperature.component';
+import { DeviceLightSlidersComponent } from './device-light-sliders/device-light-sliders.component';
+import { DeviceLightSwitchComponent } from './device-light-switch/device-light-switch.component';
+import {MatRippleModule} from '@angular/material/core';
+import { ControlComponent } from './control/control.component';
+import { ListControlsComponent } from './list-controls/list-controls.component';
+import { ListPinnedComponent } from './list-pinned/list-pinned.component';
 
 
 
@@ -46,7 +52,12 @@ import { ControlTemperatureComponent } from './control-temperature/control-tempe
     RoomHallComponent,
     DeviceVideoComponent,
     DeviceClockComponent,
-    ControlTemperatureComponent
+    ControlTemperatureComponent,
+    DeviceLightSlidersComponent,
+    DeviceLightSwitchComponent,
+    ControlComponent,
+    ListControlsComponent,
+    ListPinnedComponent
   ],
   imports: [
     BrowserModule,
@@ -60,7 +71,8 @@ import { ControlTemperatureComponent } from './control-temperature/control-tempe
     MatCardModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    FlexLayoutModule
+    FlexLayoutModule,
+    MatRippleModule
   ],
   providers: [],
   bootstrap: [AppComponent]
